@@ -1,9 +1,7 @@
-import RootLayout from "./layout";
-
-export default function Home(): JSX.Element {
+export default function pageHome(): JSX.Element {
   return (
-    <RootLayout>
+    <div>
       <h1>Welcome to the Inlaze Next.js Starter!</h1>
-    </RootLayout>
+    </div>
   );
 }
