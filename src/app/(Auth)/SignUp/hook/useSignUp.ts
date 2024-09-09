@@ -11,6 +11,7 @@ export async function useSignUp(values: SignUpFormValues): Promise<{
         "Content-Type": "application/json",
       },
       body: JSON.stringify(values),
+      credentials: "include",
     });
 
     if (!response.ok) {

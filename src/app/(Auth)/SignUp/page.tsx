@@ -2,13 +2,13 @@
 import LoadingSpinner from "@/components/404/LoadingSpinner";
 import dynamic from "next/dynamic";
 
-const PageSingIn = dynamic(() => import("./Pages"), {
+const PageSignUp = dynamic(() => import("./Pages"), {
   ssr: true,
   loading: () => <LoadingSpinner />,
 });
 
-const SignIn = (): JSX.Element => {
-  return <PageSingIn />;
+const SignUp = (): JSX.Element => {
+  return <PageSignUp />;
 };
 
-export default SignIn;
+export default SignUp;

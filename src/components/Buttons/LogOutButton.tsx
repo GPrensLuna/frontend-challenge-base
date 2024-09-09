@@ -1,10 +1,32 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 "use client";
-import { signOut } from "next-auth/react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 const LogOutButton = ({ className }: { className?: string }): JSX.Element => {
+  const router = useRouter();
+
   const handleClick = async (): Promise<void> => {
-    await signOut({ callbackUrl: "/SignIn" });
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
+
+      router.push("/");
+      window.location.reload();
+    } catch {
+      throw new Error("Logout failed");
+    }
   };
 
   return (
