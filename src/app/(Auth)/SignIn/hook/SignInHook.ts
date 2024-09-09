@@ -1,6 +1,6 @@
-import { Auth } from "@/auth";
 import { InferType } from "yup";
 import { SignInSchema } from "../validations";
+import { signIn } from "next-auth/react";
 
 interface SignInResponse {
   status: number;
@@ -15,7 +15,7 @@ export const SignInHook = async (
   try {
     await SignInSchema.validate(values, { abortEarly: false });
 
-    await Auth.signIn("credentials", {
+    await signIn("credentials", {
       email: values.email,
       password: values.password,
       redirect: false,

@@ -1,3 +1,3 @@
 "use server";
-import { Auth } from "@/auth";
-export const { GET, POST } = Auth.handlers;
+import { handlers } from "@/auth";
+export const { GET, POST } = handlers;

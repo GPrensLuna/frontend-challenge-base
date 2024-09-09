@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/naming-convention */
 import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 
-export const Auth = NextAuth({
+export const { auth, handlers, signOut } = NextAuth({
   session: { strategy: "jwt" },
   ...authConfig,
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       try {
         if (user) {
           token.role = user.role;
@@ -17,7 +18,7 @@ export const Auth = NextAuth({
         throw new Error("Failed to process JWT callback");
       }
     },
-    session({ session, token }) {
+    async session({ session, token }) {
       try {
         session.user = {
           ...session.user,
