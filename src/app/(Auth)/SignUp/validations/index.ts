@@ -1,20 +1,23 @@
 /* eslint-disable prettier/prettier */
 import { object, string } from "yup";
 
-export const SignInValue = {
+export const SignUpValue = {
   email: "",
   password: "",
+  username: "",
 };
 
-export interface SignInFormValues {
+export interface SignUpFormValues {
   email: string;
+  username: string;
   password: string;
 }
 
-export const SignInSchema = object({
+export const SignUpSchema = object({
   email: string()
     .email("El email debe ser válido")
     .required("El email es requerido"),
+  username: string().required("El username es requerido"),
   password: string()
     .required("La contraseña es requerida")
     .min(8, "La contraseña debe tener al menos 8 caracteres")
@@ -33,7 +36,7 @@ export const SignInSchema = object({
     ),
 });
 
-export const SignInData = [
+export const SignUpData = [
   {
     id: "email",
     label: "email",
@@ -55,6 +58,19 @@ export const SignInData = [
     placeholder: "password",
     required: true,
     type: "password",
+    value: "",
+    error: "",
+    styleInput: "",
+    StyleLabel: "",
+  },
+  {
+    id: "username",
+    label: "username",
+    title: "username",
+    name: "username",
+    placeholder: "username",
+    required: true,
+    type: "text",
     value: "",
     error: "",
     styleInput: "",

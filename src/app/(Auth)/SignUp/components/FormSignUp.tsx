@@ -4,33 +4,33 @@ import { useRouter } from "next/navigation";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { Button } from "@/components/ui/button";
 import {
-  SignInData,
-  SignInFormValues,
-  SignInSchema,
-  SignInValue,
+  SignUpData,
+  SignUpFormValues,
+  SignUpSchema,
+  SignUpValue,
 } from "../validations";
 import {
   errorToast,
   successToast,
   useLoadingToast,
 } from "@/components/Alert/ToastSonner";
-import { useSignIn } from "../hook/useSignIn";
+import { useSignUp } from "../hook/useSignUp";
 
-const FormSignIn = (): JSX.Element => {
+const FormSignUp = (): JSX.Element => {
   const route = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = (
-    values: SignInFormValues,
-    actions: FormikHelpers<SignInFormValues>,
+    values: SignUpFormValues,
+    actions: FormikHelpers<SignUpFormValues>,
   ): void => {
     startTransition(async () => {
       try {
-        const { message } = await useSignIn(values);
+        const { message } = await useSignUp(values);
         actions.resetForm();
         route.push(process.env.URL_LOGIN ?? "");
         route.refresh();
-        successToast(message);
+        successToast(message || "");
       } catch {
         errorToast("Error desconocido");
       }
@@ -45,13 +45,13 @@ const FormSignIn = (): JSX.Element => {
         <h1 className="uppercase text-3xl">Iniciar sesión</h1>
 
         <Formik
-          initialValues={SignInValue}
-          validationSchema={SignInSchema}
+          initialValues={SignUpValue}
+          validationSchema={SignUpSchema}
           onSubmit={onSubmit}
         >
           {() => (
             <Form className="space-y-8 ">
-              {SignInData.map(
+              {SignUpData.map(
                 ({ name, title, placeholder, type, required }) => (
                   <div key={name}>
                     <label
@@ -92,4 +92,4 @@ const FormSignIn = (): JSX.Element => {
   );
 };
 
-export default FormSignIn;
+export default FormSignUp;

@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Movie } from "./typescript";
 import Alert from "@/components/Alert/Alert";
+import FavoriteButton from "./components/FavoriteButton";
+import RatingCircle from "./components/RatingCircle";
 
 const BannerHome = (): JSX.Element => {
   const { error, loading, movies } = useUpcoming();
@@ -98,15 +100,13 @@ const BannerHome = (): JSX.Element => {
           </section>
 
           <section className="flex flex-col md:flex-row items-center w-full md:w-1/3 space-x-4 pr-24 pb-4 h-40 justify-end">
-            <button
-              className="px-4 py-2 rounded text-black"
+            <FavoriteButton
+              isFavorita={isFavorita}
               onClick={handleFavoriteClick}
-            >
-              {isFavorita ? "❤️" : "🤍"}
-            </button>
-            <p className="text-base md:text-lg">
-              <strong>Popularidad:</strong> {randomMovie.popularity}
-            </p>
+            />
+            <div className="pt-2 flex text-white items-center justify-center">
+              <RatingCircle rating={randomMovie.vote_average} />
+            </div>
           </section>
         </article>
 

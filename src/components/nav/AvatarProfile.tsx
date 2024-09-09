@@ -6,49 +6,78 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import Image from "next/image";
-import LogOutButton from "@/components/Buttons/LogOutButton";
-import { FC } from "react";
 import UserOffSVG from "./svg/UserOffSVG";
+import SignIn from "@/app/(Auth)/SignIn/page";
+import Image from "next/image";
+import login from "./svg/login.png";
+import { useState } from "react";
+import FormSignUp from "@/app/(Auth)/SignUp/components/FormSignUp";
 
-interface AvatarProfileProps {
-  image?: string | null;
-  name?: string;
-}
+const AvatarProfile: React.FC = () => {
+  const [showSignIn, setShowSignIn] = useState<boolean>(true);
 
-const AvatarProfile: FC<AvatarProfileProps> = ({ image, name }) => {
+  const toggleForm = (): void => {
+    setShowSignIn(!showSignIn);
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <article className="relative">
           <Avatar>
-            {image ? (
-              <Image
-                src={image}
-                alt="User Avatar"
-                loading="eager"
-                role="img"
-                width={32}
-                height={32}
-              />
-            ) : (
-              <span className="justify-center items-center flex h-full w-full ">
-                <UserOffSVG />
-              </span>
-            )}
+            <span className="flex items-center justify-center h-full w-full">
+              <UserOffSVG />
+            </span>
           </Avatar>
         </article>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align="center"
-        className="absolute -right-5 top-3 w-52 px-2 py-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg"
+        align="end"
+        className="absolute right-0 top-0 w-[90vw] max-w-[1220px] h-[720px] bg-transparent dark:bg-gray-800 shadow-lg border-t rounded-lg overflow-hidden backdrop-blur-md"
       >
-        <section className="px-2 py-2 text-center text-gray-900 bg-[#d1bf1c] uppercase lg:text-base  rounded-xl ">
-          {name}
-        </section>
-        <LogOutButton className="block p-2 w-full rounded-md content-center transition duration-300 ease-in-out hover:bg-red-500 text-center uppercase font-bold" />
+        <article className="flex h-full p-4">
+          <section className="w-3/5 h-full relative p-2 pr-8">
+            <button
+              onClick={toggleForm}
+              className="mb-4 px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              {showSignIn
+                ? "¿No tienes cuenta? Regístrate"
+                : "¿Ya tienes cuenta? Inicia sesión"}
+            </button>
+
+            {showSignIn ? <SignIn /> : <FormSignUp />}
+          </section>
+          <section className="w-2/5 h-full relative bg-slate-900 rounded-tr-lg rounded-br-lg">
+            <div className="pt-8 px-4 grid justify-center">
+              <h1 className="text-white text-4xl font-semibold text-center">
+                Welcome to Quickbet Movies!
+              </h1>
+              <p className="text-white text-base text-center pt-8 px-12">
+                🎬 Ready to unlock a universe of cinematic delights? Sign up now
+                and start your journey with us!
+              </p>
+            </div>
+            <div className="relative w-[547px] h-[546px]  overflow-hidden">
+              <Image
+                src={login}
+                alt="login"
+                layout="fill"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "center",
+                }}
+                role="img"
+                loading="lazy"
+                aria-label="login backdrop"
+                className="absolute inset-0"
+                placeholder="blur"
+              />
+            </div>
+          </section>
+        </article>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
+
 export default AvatarProfile;
