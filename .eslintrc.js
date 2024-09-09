@@ -80,7 +80,7 @@ module.exports = {
     "no-console": "error",
     "@typescript-eslint/unified-signatures": "off",
     "no-unused-vars": "off",
-   //  "prettier/prettier": { endofline: "auto" },
+    // "prettier/prettier": { endofline: "auto" },
     "@typescript-eslint/no-unused-vars": [
       "warn", // or "error"
       {

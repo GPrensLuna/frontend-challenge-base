@@ -21,13 +21,16 @@ export const useProfile = (): {
   useEffect(() => {
     const fetchProfile = async (): Promise<void> => {
       try {
-        const response = await fetch(`http://localhost:3000/api/auth/profile`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
           },
-          credentials: "include",
-        });
+        );
 
         if (!response.ok) {
           if (response.status === 401) {
