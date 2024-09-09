@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 "use client";
 import { useState, useEffect } from "react";
 import { ApiResponse, Movie } from "../typescript";
@@ -26,10 +25,7 @@ export const usePopular = ({
       setError(null);
 
       try {
-        const genreQuery = genreId ? `&with_genres=${genreId}` : "";
-        const url = `/api/movies/popular?page=${page}${genreQuery}`;
-
-        const response = await fetch(url);
+        const response = await fetch(`/api/movies/popular`);
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
