@@ -10,7 +10,7 @@ export async function GET(): Promise<NextResponse<MoviesResponse>> {
   try {
     const response = await fetch(
       // eslint-disable-next-line prettier/prettier
-      `${process.env.NEXT_PUBLIC_API_URL}/movies/upcoming`,
+      `${process.env.API_URL_BACKEND}/movies/upcoming`
     );
     if (!response.ok) {
       throw new Error(`Error fetching data: ${response.statusText}`);

@@ -7,17 +7,14 @@ export async function useSignIn(values: SignInFormValues): Promise<{
   message: string;
 }> {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-        credentials: "include",
+    const response = await fetch(`${process.env.API_URL_BACKEND}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(values),
+      credentials: "include",
+    });
 
     if (!response.ok) {
       const errorData = await response.json();

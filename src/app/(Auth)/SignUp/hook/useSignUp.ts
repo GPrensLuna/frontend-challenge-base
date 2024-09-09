@@ -5,7 +5,7 @@ export async function useSignUp(values: SignUpFormValues): Promise<{
   message: string;
 }> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+    const response = await fetch(`${process.env.API_URL_BACKEND}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

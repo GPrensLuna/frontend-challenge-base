@@ -11,9 +11,7 @@ export async function GET(): Promise<
   NextResponse<MoviesResponse | ErrorResponse>
 > {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/favorites`,
-    );
+    const response = await fetch(`${process.env.API_URL_BACKEND}/favorites`);
     if (!response.ok) {
       throw new Error(`Error fetching data: ${response.statusText}`);
     }
@@ -27,7 +25,7 @@ export async function GET(): Promise<
 }
 
 export async function POST(
-  req: NextRequest,
+  req: NextRequest
 ): Promise<NextResponse<MoviesResponse | ErrorResponse>> {
   try {
     const body: FavoriteRequestBody = await req.json();
@@ -37,7 +35,7 @@ export async function POST(
         method: "POST",
         body: JSON.stringify(body),
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
     if (!response.ok) {
       throw new Error(`Error creating favorite: ${response.statusText}`);
@@ -49,13 +47,13 @@ export async function POST(
   } catch {
     return NextResponse.json(
       { error: "Failed to create favorite" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function DELETE(
-  req: NextRequest,
+  req: NextRequest
 ): Promise<NextResponse<MoviesResponse | ErrorResponse>> {
   try {
     const body: FavoriteRequestBody = await req.json();
@@ -65,7 +63,7 @@ export async function DELETE(
         method: "DELETE",
         body: JSON.stringify(body),
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
     if (!response.ok) {
       throw new Error(`Error deleting favorite: ${response.statusText}`);
@@ -77,7 +75,7 @@ export async function DELETE(
   } catch {
     return NextResponse.json(
       { error: "Failed to delete favorite" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

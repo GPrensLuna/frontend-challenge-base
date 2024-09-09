@@ -8,7 +8,7 @@ export async function GET(): Promise<
   try {
     const response = await fetch(
       // eslint-disable-next-line prettier/prettier
-      `${process.env.NEXT_PUBLIC_API_URL}/movies/genres`,
+      `${process.env.API_URL_BACKEND}/movies/genres`
     );
     if (!response.ok) {
       throw new Error(`Error fetching data: ${response.statusText}`);

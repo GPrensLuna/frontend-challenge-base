@@ -8,7 +8,7 @@ export async function GET(): Promise<
   try {
     const response = await fetch(
       // eslint-disable-next-line prettier/prettier
-      `${process.env.NEXT_PUBLIC_API_URL}/movies/top_rated`,
+      `${process.env.API_URL_BACKEND}/movies/top_rated`
     );
     if (!response.ok) {
       throw new Error(`Error fetching data: ${response.statusText}`);
@@ -21,7 +21,7 @@ export async function GET(): Promise<
     return NextResponse.json(
       { error: "Failed to fetch data" },
       // eslint-disable-next-line prettier/prettier
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
