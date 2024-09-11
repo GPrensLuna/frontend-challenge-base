@@ -18,6 +18,8 @@ module.exports = {
     jest: true,
   },
   ignorePatterns: [".eslintrc.js", "global.d.ts", "jest.base.config.ts"],
+  //"prettier/prettier": { endofline: "auto" },
+
   rules: {
     "unused-imports/no-unused-imports": "error",
     "no-duplicate-imports": "error",
@@ -80,7 +82,6 @@ module.exports = {
     "no-console": "error",
     "@typescript-eslint/unified-signatures": "off",
     "no-unused-vars": "off",
-    // "prettier/prettier": { endofline: "auto" },
     "@typescript-eslint/no-unused-vars": [
       "warn", // or "error"
       {

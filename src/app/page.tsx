@@ -4,7 +4,7 @@ const BannerHome = dynamic(() => import("@/page/Home/Banner"), {
   loading: () => <div>Loading...</div>,
   ssr: false,
 });
-const AsideHome = dynamic(() => import("@/page/Home/Aside"), {
+const AsideHome = dynamic(() => import("@/app/movie/components/Aside"), {
   loading: () => <div>Loading...</div>,
   ssr: false,
 });

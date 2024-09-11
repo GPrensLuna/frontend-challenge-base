@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import dynamic from "next/dynamic";
 
-const AsideHome = dynamic(() => import("@/page/Home/Aside"), {
+const AsideHome = dynamic(() => import("./components/Aside"), {
   loading: () => <div>Loading...</div>,
   ssr: false,
 });

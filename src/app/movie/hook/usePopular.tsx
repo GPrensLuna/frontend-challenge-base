@@ -2,10 +2,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { ApiResponse, Movie } from "../typescript";
 import { useSearchParams } from "next/navigation";
+import useDebounce from "../hook/useDebounce";
 
-export const usePopular = (
-  initialPage: number = 1,
-): {
+export const usePopular = (): {
   movies: Movie[];
   loading: boolean;
   error: string | null;
@@ -18,65 +17,64 @@ export const usePopular = (
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [currentPage, setCurrentPage] = useState<number>(
-    Number(searchParams.get("page")) || initialPage,
-  );
+  const [page, setPage] = useState<number>(1);
+  const [query, setQuery] = useState<string>("");
+  const [genre, setGenre] = useState<string>("");
 
-  const setSearchParams = (params: URLSearchParams): void => {
-    const url = new URL(window.location.href);
-    url.search = params.toString();
-    window.history.pushState({}, "", url.toString());
-  };
+  const debouncedQuery = useDebounce(query, 300);
 
   useEffect(() => {
-    const pageFromParams = Number(searchParams.get("page"));
-    if (!isNaN(pageFromParams) && pageFromParams !== currentPage) {
-      setCurrentPage(pageFromParams);
+    const pageFromParams = Number(searchParams.get("page")) ?? 1;
+    const queryFromParams = searchParams.get("query") ?? "";
+    const genreFromParams = searchParams.get("with_genres") ?? "";
+
+    if (pageFromParams !== page) {
+      setPage(pageFromParams);
     }
-  }, [searchParams, currentPage]);
+    if (queryFromParams !== query) {
+      setQuery(queryFromParams);
+    }
+    if (genreFromParams !== genre) {
+      setGenre(genreFromParams);
+    }
+  }, [searchParams, page, query, genre]);
 
   const fetchMovies = useCallback(async (): Promise<void> => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-      }).toString();
+      const params = new URLSearchParams();
+      params.set("page", page.toString());
 
-      const response = await fetch(`/api/movies/popular?${params}`);
+      if (debouncedQuery) params.set("query", debouncedQuery);
+      if (genre) params.set("with_genres", genre);
+
+      const url = `/api/movies/popular?${params.toString()}`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
       const data: ApiResponse = await response.json();
-      setMovies(data.results);
+      setMovies(data.results || []);
       setTotalPages(data.total_pages ?? 1);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unknown error occurred");
     } finally {
       setLoading(false);
     }
-  }, [currentPage]);
+  }, [page, debouncedQuery, genre]);
 
   useEffect(() => {
     fetchMovies();
   }, [fetchMovies]);
-
-  const setPage = (page: number): void => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-
-    const params = new URLSearchParams(window.location.search);
-    params.set("page", page.toString());
-    setSearchParams(params);
-  };
 
   return {
     movies,
     loading,
     error,
     totalPages,
-    currentPage,
+    currentPage: page,
     setPage,
   };
 };
