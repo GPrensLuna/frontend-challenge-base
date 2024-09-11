@@ -2,8 +2,10 @@
     "material-icon-theme.activeIconPack": "react",
          "cSpell.words": [
             "esnext",
+            "Favorited",
             "lucide",
             "NEXTAUTH",
+            "nextjs",
             "sonner",
             "tailwindcss"
         ]

@@ -32,7 +32,7 @@ export const MenuNavBar: MenuNavBarType = [
   },
   {
     id: "Popular",
-    href: "/Popular",
+    href: "/movie/populate",
     label: "Popular",
     name: "Popular",
     role: "user",

@@ -32,7 +32,7 @@ const Aside = (): React.JSX.Element => {
   );
 
   return (
-    <aside className="p-4">
+    <aside className="p-4 h-auto">
       <h2 className="text-lg font-semibold">Filter Options</h2>
 
       <input

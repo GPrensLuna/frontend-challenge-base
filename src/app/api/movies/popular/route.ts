@@ -2,13 +2,15 @@
 import { NextResponse } from "next/server";
 import { ErrorResponse, MoviesResponse } from "../typescript";
 
-export async function GET(): Promise<
-  NextResponse<MoviesResponse | ErrorResponse>
-> {
+export async function GET({
+  nextUrl,
+}: {
+  nextUrl: URL;
+}): Promise<NextResponse<MoviesResponse | ErrorResponse>> {
   try {
+    const page = nextUrl.searchParams.get("page") ?? "1";
     const response = await fetch(
-      // eslint-disable-next-line prettier/prettier
-      `${process.env.API_URL_BACKEND}/movies/popular`
+      `${process.env.API_URL_BACKEND}/movies/popular?page=${page}`,
     );
 
     if (!response.ok) {
@@ -17,7 +19,10 @@ export async function GET(): Promise<
 
     const data = await response.json();
     return NextResponse.json(data);
-  } catch {
-    return NextResponse.json({ error: "Traer generes" }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Error retrieving data" },
+      { status: 500 },
+    );
   }
 }

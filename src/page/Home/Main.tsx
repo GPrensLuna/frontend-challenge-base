@@ -20,22 +20,22 @@ const Main = (): React.JSX.Element[] => {
     {
       id: 1,
       title: "Popular",
-      movies: popular,
+      movies: popular || [],
     },
     {
       id: 2,
       title: "Now Playing",
-      movies: nowPlaying,
+      movies: nowPlaying || [],
     },
     {
       id: 3,
       title: "Top Rated",
-      movies: topRated,
+      movies: topRated || [],
     },
     {
       id: 4,
       title: "Upcoming",
-      movies: upcoming,
+      movies: upcoming || [],
     },
   ];
 

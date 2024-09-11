@@ -14,7 +14,7 @@ export const useNowPlaying = (): {
   useEffect(() => {
     const fetchMovies = async (): Promise<void> => {
       try {
-        const response = await fetch("/api/movies/now_playing");
+        const response = await fetch("/api/movie/now_playing");
         const data: ApiResponse = await response.json();
         setMovies(data.results);
       } catch (err) {

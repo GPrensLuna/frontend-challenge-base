@@ -30,7 +30,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <nav>
+          <nav className="h-16 mb-2">
             <Navbar />
           </nav>
           {children}

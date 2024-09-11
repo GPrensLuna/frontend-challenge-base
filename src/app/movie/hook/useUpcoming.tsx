@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { ApiResponse, Movie } from "../typescript";
 
-export const useNowPlaying = (): {
+export const useUpcoming = (): {
   movies: Movie[];
   loading: boolean;
   error: string | null;
@@ -14,7 +14,7 @@ export const useNowPlaying = (): {
   useEffect(() => {
     const fetchMovies = async (): Promise<void> => {
       try {
-        const response = await fetch("/api/movies/now_playing");
+        const response = await fetch("/api/movies/upcoming");
         const data: ApiResponse = await response.json();
         setMovies(data.results);
       } catch (err) {

@@ -8,12 +8,11 @@ export async function GET(): Promise<
 > {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/movies/now_playing`,
+      `${process.env.API_URL_BACKEND}/movies/now_playing`,
     );
     if (!response.ok) {
       throw new Error(`Error fetching data: ${response.statusText}`);
     }
-
     const data = await response.json();
 
     return NextResponse.json(data);

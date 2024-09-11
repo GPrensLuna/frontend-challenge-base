@@ -7,7 +7,7 @@ export async function useSignIn(values: SignInFormValues): Promise<{
   message: string;
 }> {
   try {
-    const response = await fetch(`${process.env.API_URL_BACKEND}/auth/login`, {
+    const response = await fetch(`/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
