@@ -33,7 +33,7 @@ export const usePopular = (
     if (!isNaN(pageFromParams) && pageFromParams !== currentPage) {
       setCurrentPage(pageFromParams);
     }
-  }, [searchParams]);
+  }, [searchParams, currentPage]);
 
   const fetchMovies = useCallback(async (): Promise<void> => {
     setLoading(true);
