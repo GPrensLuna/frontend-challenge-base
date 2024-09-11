@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { ErrorResponse, MoviesResponse } from "../typescript";
 
-export async function GET({
-  nextUrl,
-}: {
-  nextUrl: URL;
-}): Promise<NextResponse<MoviesResponse | ErrorResponse>> {
+export async function GET(
+  request: NextRequest,
+): Promise<NextResponse<MoviesResponse | ErrorResponse>> {
   try {
-    const page = nextUrl.searchParams.get("page") ?? "1";
+    const { searchParams } = new URL(request.url);
+    const page = searchParams.get("page") ?? "1";
+
     const response = await fetch(
       `${process.env.API_URL_BACKEND}/movies/popular?page=${page}`,
     );
@@ -18,10 +18,11 @@ export async function GET({
     }
 
     const data = await response.json();
+
     return NextResponse.json(data);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: "Error retrieving data" },
+      { error: "Failed to fetch data" },
       { status: 500 },
     );
   }
