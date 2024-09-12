@@ -1,15 +1,23 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
-
-interface Movie {
-  id: string;
-  title: string;
-}
+import { Movie } from "@/page/Home/typescript";
+import { errorToast, successToast } from "@/components/Alert/ToastSonner";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from "react";
+import { useSession } from "./SessionProvider";
 
 interface FavoriteMoviesContextProps {
   favoriteMovies: Movie[];
-  addFavorite: (movie: Movie) => void;
-  removeFavorite: (movieId: string) => void;
+  addFavorite: (movie: Movie) => Promise<void>;
+  removeFavorite: (movieId: string) => Promise<void>;
+  loading: boolean;
+  error: string | null;
 }
 
 const FavoriteMoviesContext = createContext<
@@ -19,21 +27,98 @@ const FavoriteMoviesContext = createContext<
 const FavoriteMoviesProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const { profile } = useSession();
   const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const addFavorite = (movie: Movie): void => {
-    setFavoriteMovies((prevFavorites) => [...prevFavorites, movie]);
-  };
+  const fetchFavoriteMovies = useCallback(async () => {
+    if (!profile) return;
 
-  const removeFavorite = (movieId: string): void => {
-    setFavoriteMovies((prevFavorites) =>
-      prevFavorites.filter((movie) => movie.id !== movieId),
-    );
-  };
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/favorite?userId=${profile.id}`);
+      if (response.ok) {
+        const data: Movie[] = await response.json();
+        setFavoriteMovies(data);
+      } else {
+        setError("Failed to load favorite movies list.");
+        errorToast("Failed to load favorite movies list.");
+      }
+    } catch {
+      setError("Error loading favorite movies list.");
+      errorToast("Error loading favorite movies list.");
+    } finally {
+      setLoading(false);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    fetchFavoriteMovies();
+  }, [fetchFavoriteMovies]);
+
+  const addFavorite = useCallback(
+    async (movie: Movie): Promise<void> => {
+      if (!profile) return;
+
+      try {
+        const response = await fetch("/api/favorite", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ userId: profile.id, movie }),
+        });
+        if (response.ok) {
+          setFavoriteMovies((prevMovies) => {
+            if (Array.isArray(prevMovies)) {
+              return [...prevMovies, movie];
+            } else {
+              return [movie];
+            }
+          });
+          successToast("Movie added to favorites.");
+        } else {
+          errorToast("Failed to add movie to favorites.");
+        }
+      } catch {
+        errorToast("Error adding movie to favorites.");
+      }
+    },
+    [profile],
+  );
+
+  const removeFavorite = useCallback(
+    async (movieId: string): Promise<void> => {
+      if (!profile) return;
+
+      try {
+        const response = await fetch(`/api/favorite/${movieId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: profile.id }),
+        });
+        if (response.ok) {
+          setFavoriteMovies((prevMovies) =>
+            prevMovies.filter((movie) => movie.id !== parseInt(movieId)),
+          );
+          successToast("Movie removed from favorites.");
+        } else {
+          errorToast("Failed to remove movie from favorites.");
+        }
+      } catch {
+        errorToast("Error removing movie from favorites.");
+      }
+    },
+    [profile],
+  );
 
   return (
     <FavoriteMoviesContext.Provider
-      value={{ favoriteMovies, addFavorite, removeFavorite }}
+      value={{ favoriteMovies, addFavorite, removeFavorite, loading, error }}
     >
       {children}
     </FavoriteMoviesContext.Provider>

@@ -11,15 +11,9 @@ interface BannerMovieProps {
     title: string;
     movies: Movie[];
   };
-  onFavoriteClick: (movieId: number) => void;
-  isFavorita: boolean;
 }
 
-const BannerMovie: React.FC<BannerMovieProps> = ({
-  section,
-  onFavoriteClick,
-  isFavorita,
-}) => {
+const BannerMovie: React.FC<BannerMovieProps> = ({ section }) => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const scroll = (direction: "left" | "right"): void => {
@@ -55,12 +49,7 @@ const BannerMovie: React.FC<BannerMovieProps> = ({
           >
             <div className="flex flex-nowrap gap-4">
               {section.movies.slice(0, 8).map((movie) => (
-                <BannerCard
-                  key={movie.id}
-                  movie={movie}
-                  onFavoriteClick={() => onFavoriteClick(movie.id)}
-                  isFavorita={isFavorita}
-                />
+                <BannerCard key={movie.id} movie={movie} />
               ))}
             </div>
           </div>

@@ -12,17 +12,19 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         { status: 500 },
       );
     }
-    const authToken = req.cookies.get("authorization");
 
+    const authToken = req.cookies.get("Authentication");
     const response = await fetch(`${apiUrlBackend}/auth/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        Authentication: `Bearer ${authToken?.value}`,
       },
       credentials: "include",
     });
+
     const cookies = response.headers.get("set-cookie");
+
     const responseBody = await response.json();
 
     const nextResponse = NextResponse.json(responseBody);

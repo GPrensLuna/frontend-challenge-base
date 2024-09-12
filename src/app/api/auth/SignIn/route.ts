@@ -14,13 +14,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { status: 500 },
       );
     }
-    const authToken = req.cookies.get("authorization");
+    const authToken = req.cookies.get("Authentication");
 
     const response = await fetch(`${apiUrlBackend}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        Authentication: `Bearer ${authToken?.value}`,
       },
       body: JSON.stringify(body),
       credentials: "include",

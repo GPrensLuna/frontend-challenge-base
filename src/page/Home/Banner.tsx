@@ -7,8 +7,8 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Movie } from "./typescript";
 import Alert from "@/components/Alert/Alert";
-import FavoriteButton from "./components/FavoriteButton";
 import RatingCircle from "./components/RatingCircle";
+import FavoriteButton from "@/app/movie/components/FavoriteButton";
 
 const BannerHome = (): JSX.Element => {
   const { error, loading, movies } = useUpcoming();
@@ -30,7 +30,7 @@ const BannerHome = (): JSX.Element => {
     selectRandomMovie();
     const intervalId = setInterval(selectRandomMovie, 60000);
 
-    return () => clearInterval(intervalId);
+    return (): void => clearInterval(intervalId);
   }, [movies]);
 
   if (loading) {
@@ -50,24 +50,6 @@ const BannerHome = (): JSX.Element => {
   if (!randomMovie.backdrop_path) {
     return <p>No movies available.</p>;
   }
-
-  const handleFavoriteClick = async (): Promise<void> => {
-    const confirmed = await Alert.confirm(
-      "Confirmación",
-      "¿Deseas agregar o quitar esta película de tus favoritas?",
-    );
-    if (confirmed) {
-      setIsFavorita(!isFavorita);
-      Alert.success(
-        `${
-          isFavorita
-            ? "Película removida de favoritas"
-            : "Película añadida a favoritas"
-        }`,
-        `La película "${randomMovie.title}" ha sido ${isFavorita ? "removida" : "añadida"} a tus favoritas.`,
-      );
-    }
-  };
 
   return (
     <section className="relative w-full h-[550px] bg-black">
@@ -101,8 +83,9 @@ const BannerHome = (): JSX.Element => {
 
           <section className="flex flex-col md:flex-row items-center w-full md:w-1/3 space-x-4 pr-24 pb-4 h-40 justify-end">
             <FavoriteButton
-              isFavorita={isFavorita}
-              onClick={handleFavoriteClick}
+              key={randomMovie.id}
+              id={randomMovie.id}
+              movie={randomMovie}
             />
             <div className="pt-2 flex text-white items-center justify-center">
               <RatingCircle rating={randomMovie.vote_average} />
