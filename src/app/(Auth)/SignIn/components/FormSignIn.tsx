@@ -9,38 +9,38 @@ import {
   SignInSchema,
   SignInValue,
 } from "../validations";
-import {
-  errorToast,
-  successToast,
-  useLoadingToast,
-} from "@/components/Alert/ToastSonner";
+import { errorToast, useLoadingToast } from "@/components/Alert/ToastSonner";
 import { useSignIn } from "../hook/useSignIn";
 
 const FormSignIn = (): JSX.Element => {
   const route = useRouter();
+  const { signIn } = useSignIn();
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = (
     values: SignInFormValues,
     actions: FormikHelpers<SignInFormValues>,
   ): void => {
-    startTransition(async () => {
-      try {
-        const { message } = await useSignIn(values);
-        actions.resetForm();
-        route.push(process.env.URL_LOGIN ?? "");
-        route.refresh();
-        successToast(message);
-      } catch {
-        errorToast("Error desconocido");
-      }
-    });
+    try {
+      startTransition(async () => {
+        const { message, success } = await signIn(values);
+        if (success) {
+          route.refresh();
+        } else {
+          errorToast(message);
+        }
+      });
+    } catch {
+      errorToast("An unexpected error occurred.");
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
 
   useLoadingToast(isPending);
 
   return (
-    <article className="min-h-[700px] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <article className="h-auto flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <section className="max-w-md w-full space-y-8 bg-gray-300/75 dark:bg-slate-600/90 p-10 rounded-xl">
         <h1 className="uppercase text-3xl">Iniciar sesión</h1>
 

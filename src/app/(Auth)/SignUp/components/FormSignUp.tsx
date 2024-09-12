@@ -30,7 +30,7 @@ const FormSignUp = (): JSX.Element => {
           errorToast(message);
         }
       });
-    } catch (error) {
+    } catch {
       errorToast("An unexpected error occurred.");
     } finally {
       actions.setSubmitting(false);
@@ -40,7 +40,7 @@ const FormSignUp = (): JSX.Element => {
   useLoadingToast(isPending);
 
   return (
-    <article className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <article className="h-auto flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <section className="max-w-md w-full space-y-8 p-10 rounded-xl bg-gray-300 dark:bg-slate-600">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white uppercase">
           Sign Up

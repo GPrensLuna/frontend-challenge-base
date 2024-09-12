@@ -1,41 +1,59 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/naming-convention */
+import { errorToast, successToast } from "@/components/Alert/ToastSonner";
 import { SignInFormValues } from "../validations";
+import { useSession } from "@/provider/SessionProvider";
 
-export async function useSignIn(values: SignInFormValues): Promise<{
-  success: boolean;
+interface SignInResponse {
   message: string;
-}> {
-  try {
-    const response = await fetch(`/api/auth/SignIn`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-      credentials: "include",
-    });
+  success: boolean;
+}
 
-    if (!response.ok) {
-      const errorData = await response.json();
+export function useSignIn(): {
+  signIn: (values: SignInFormValues) => Promise<SignInResponse>;
+} {
+  const { fetchProfile } = useSession();
+
+  const signIn = async (values: SignInFormValues): Promise<SignInResponse> => {
+    try {
+      const response = await fetch(`/api/auth/SignIn`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorMessage =
+          "An unexpected error occurred while processing your request.";
+
+        errorToast(errorMessage);
+
+        return {
+          message: errorMessage,
+          success: false,
+        };
+      }
+
+      fetchProfile();
+
+      successToast("Successfully signed in. Welcome!");
+
       return {
+        message: "Successfully signed in. Welcome!",
+        success: true,
+      };
+    } catch {
+      errorToast("An unexpected error occurred while processing your request.");
+
+      return {
+        message: "An unexpected error occurred while processing your request.",
         success: false,
-        message: errorData.error || "Error desconocido",
       };
     }
+  };
 
-    const data = await response.json();
-
-    document.cookie = `token=${data.data.id}; path=/; secure; SameSite=Strict`;
-
-    return {
-      success: true,
-      message: data.message || "Inicio de sesión exitoso",
-    };
-  } catch {
-    return {
-      success: false,
-      message: "Error al iniciar sesión",
-    };
-  }
+  return { signIn };
 }

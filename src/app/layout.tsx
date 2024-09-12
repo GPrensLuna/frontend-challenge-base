@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
 import dynamic from "next/dynamic";
+import { SessionProvider } from "@/provider/SessionProvider";
+import { FavoriteMoviesProvider } from "@/provider/FavoriteMoviesProvider";
 
 const Navbar = dynamic(() => import("@/components/nav/Navbar"), {
   loading: () => <div>Loading...</div>,
@@ -30,11 +32,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <nav className="h-16 mb-2">
-            <Navbar />
-          </nav>
-          {children}
-          <Toaster />
+          <SessionProvider>
+            <FavoriteMoviesProvider>
+              <nav className="h-16 mb-2">
+                <Navbar />
+              </nav>
+              {children}
+              <Toaster />
+            </FavoriteMoviesProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

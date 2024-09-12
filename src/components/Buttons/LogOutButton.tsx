@@ -1,35 +1,35 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 "use client";
 import { Button } from "../ui/button";
+import { useSession } from "@/provider/SessionProvider";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const LogOutButton = ({ className }: { className?: string }): JSX.Element => {
+  const { logout } = useSession();
   const router = useRouter();
+  const [error, setError] = useState<string>("");
 
-  const handleClick = async (): Promise<void> => {
+  const handleLogout = (): void => {
     try {
-      const response = await fetch(`/api/auth/logout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new Error("Logout failed");
-      }
-
+      logout();
       router.push("/");
-      window.location.reload();
     } catch {
-      throw new Error("Logout failed");
+      setError("No se pudo cerrar sesión. Inténtalo de nuevo.");
     }
   };
 
   return (
-    <Button className={className} variant={"destructive"} onClick={handleClick}>
-      Cerrar sesión
-    </Button>
+    <div>
+      <Button
+        className={className}
+        variant={"destructive"}
+        onClick={handleLogout}
+      >
+        Cerrar sesión
+      </Button>
+      {error && <p className="error-message">{error}</p>}
+    </div>
   );
 };
 

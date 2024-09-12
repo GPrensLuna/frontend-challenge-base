@@ -11,7 +11,7 @@ const PageSignUp: React.FC = (): JSX.Element => {
   };
 
   return !showForm ? (
-    <article className="flex flex-col items-center justify-center min-h-screen p-4">
+    <article className="flex flex-col items-center justify-center h-auto p-4">
       <button
         onClick={handleRegisterClick}
         className="px-6 py-3 border border-gray-300 rounded-md shadow-lg bg-[#F0B90B] text-white hover:bg-[#e6b83a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F0B90B] text-lg sm:text-xl lg:text-2xl w-full sm:w-[350px] lg:w-[400px]"
@@ -23,7 +23,7 @@ const PageSignUp: React.FC = (): JSX.Element => {
       </p>
     </article>
   ) : (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+    <div className="flex flex-col items-center justify-center h-auto p-4">
       <FormSignUp />
     </div>
   );

@@ -13,12 +13,12 @@ import SignIn from "@/app/(Auth)/SignIn/page";
 import Image from "next/image";
 import login from "./svg/login.png";
 import login2 from "./svg/login2.png";
-import { useProfile } from "./hook/useProfile";
 import UserOnSVG from "./svg/UserOnSVG";
 import SignUp from "@/app/(Auth)/SignUp/page";
+import { useSession } from "@/provider/SessionProvider";
 
 const AvatarProfile: React.FC = () => {
-  const { isAuthenticated } = useProfile();
+  const { isAuthenticated } = useSession();
   const [activeButton, setActiveButton] = useState<"signUp" | "logIn">(
     "signUp",
   );
@@ -50,7 +50,7 @@ const AvatarProfile: React.FC = () => {
       >
         <article className="flex h-full p-4">
           <section className="w-3/5 h-full relative p-2">
-            <div className="absolute gap-1 pt-12 w-full">
+            <div className="flex justify-center  gap-1 pt-12 w-full">
               <button
                 onClick={() => toggleForm("signUp")}
                 className={`mb-4 px-4 py-2 rounded-md shadow-sm font-semibold ${

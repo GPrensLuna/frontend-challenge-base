@@ -4,7 +4,7 @@ import { FC, memo } from "react";
 import { SkeletonButton } from "./Skeleton/SkeletonButton";
 import { MenuNavBar } from "./TypeScript";
 import dynamic from "next/dynamic";
-import { useProfile } from "./hook/useProfile";
+import { useSession } from "@/provider/SessionProvider";
 
 const NavbarDeskTop = dynamic(() => import("@/components/nav/NavbarDeskTop"), {
   loading: () => <p>Cargando menú...</p>,
@@ -28,7 +28,7 @@ const LogOutButton = dynamic(() => import("../Buttons/LogOutButton"), {
 });
 
 const Navbar: FC = () => {
-  const { isAuthenticated } = useProfile();
+  const { isAuthenticated } = useSession();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 shadow-md transition-shadow duration-300 w-full ease-in-out bg-lightNavBar dark:bg-darkNavBar h-[69px] bg-black">

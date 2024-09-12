@@ -6,26 +6,36 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json();
 
-    const response = await fetch(`${process.env.API_URL_BACKEND}/auth/login`, {
+    const apiUrlBackend = process.env.API_URL_BACKEND;
+
+    if (!apiUrlBackend) {
+      return NextResponse.json(
+        { message: "API_URL_BACKEND is not defined." },
+        { status: 500 },
+      );
+    }
+    const authToken = req.cookies.get("authorization");
+
+    const response = await fetch(`${apiUrlBackend}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify(body),
       credentials: "include",
     });
 
-    // Verificar si la respuesta no es exitosa
-    if (!response.ok) {
-      const errorData = await response.json();
-      return NextResponse.json(
-        { message: errorData.message || "Error during login." },
-        { status: response.status },
-      );
+    const cookies = response.headers.get("set-cookie");
+    const responseBody = await response.json();
+
+    const nextResponse = NextResponse.json(responseBody);
+
+    if (cookies) {
+      nextResponse.headers.set("Set-Cookie", cookies);
     }
 
-    const data = await response.json();
-    return NextResponse.json(data);
+    return nextResponse;
   } catch {
     return NextResponse.json(
       {
