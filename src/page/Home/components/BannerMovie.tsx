@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useRef } from "react";
 import BackdropImage from "./BackdropImage";
-import BannerCard from "./BannerCard";
 import { Movie } from "../typescript";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import BannerCard from "@/app/movie/components/BannerCard";
 
 interface BannerMovieProps {
   section: {

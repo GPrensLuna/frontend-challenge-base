@@ -18,26 +18,28 @@ export const usePopular = (): {
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
-  const [query, setQuery] = useState<string>("");
-  const [genre, setGenre] = useState<string>("");
+  const [query, setQuery] = useState<string>(searchParams.get("query") ?? "");
+  const [genre, setGenre] = useState<string>(searchParams.get("genre") ?? "");
 
   const debouncedQuery = useDebounce(query, 300);
 
   useEffect(() => {
-    const pageFromParams = Number(searchParams.get("page")) ?? 1;
+    const pageFromParams = Number(searchParams.get("page")) || 1;
     const queryFromParams = searchParams.get("query") ?? "";
-    const genreFromParams = searchParams.get("with_genres") ?? "";
+    const genreFromParams = searchParams.get("genre") ?? "";
 
     if (pageFromParams !== page) {
       setPage(pageFromParams);
     }
+
     if (queryFromParams !== query) {
       setQuery(queryFromParams);
     }
+
     if (genreFromParams !== genre) {
       setGenre(genreFromParams);
     }
-  }, [searchParams, page, query, genre]);
+  }, [searchParams]);
 
   const fetchMovies = useCallback(async (): Promise<void> => {
     setLoading(true);
@@ -47,7 +49,7 @@ export const usePopular = (): {
       params.set("page", page.toString());
 
       if (debouncedQuery) params.set("query", debouncedQuery);
-      if (genre) params.set("with_genres", genre);
+      if (genre) params.set("genre", genre);
 
       const url = `/api/movies/popular?${params.toString()}`;
       const response = await fetch(url);
@@ -56,7 +58,7 @@ export const usePopular = (): {
       }
 
       const data: ApiResponse = await response.json();
-      setMovies(data.results || []);
+      setMovies(data.results ?? []);
       setTotalPages(data.total_pages ?? 1);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unknown error occurred");

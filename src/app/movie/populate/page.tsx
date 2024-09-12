@@ -10,7 +10,7 @@ const PagePopular = (): React.JSX.Element => {
   const [favoritedMovies, setFavoritedMovies] = useState<Set<number>>(
     new Set(),
   );
-  const { movies, setPage, totalPages, currentPage } = usePopular();
+  const { loading, movies, setPage, totalPages, currentPage } = usePopular();
 
   const handleFavoriteClick = async (movieId: number): Promise<void> => {
     const confirmed = await Alert.confirm(
@@ -41,6 +41,7 @@ const PagePopular = (): React.JSX.Element => {
     }
   };
 
+  if (loading) return <p>Cargando películas...</p>;
   return (
     <>
       <PaginationControls

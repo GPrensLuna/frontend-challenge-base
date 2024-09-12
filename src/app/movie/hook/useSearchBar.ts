@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useDebounce from "./useDebounce";
 import { MultiValue } from "react-select";
 
-const DEBOUNCE_DELAY = 500;
+const DEBOUNCE_DELAY = 200;
 
 interface GenreOption {
   value: number;
