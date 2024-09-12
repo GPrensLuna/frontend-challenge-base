@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 "use client";
-import { useState } from "react";
 
+import { useState } from "react";
 import { Avatar } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -19,7 +19,6 @@ import SignUp from "@/app/(Auth)/SignUp/page";
 
 const AvatarProfile: React.FC = () => {
   const { isAuthenticated } = useProfile();
-
   const [activeButton, setActiveButton] = useState<"signUp" | "logIn">(
     "signUp",
   );
@@ -50,14 +49,14 @@ const AvatarProfile: React.FC = () => {
         className="absolute right-0 top-0 w-[90vw] max-w-[1220px] h-[720px] bg-transparent dark:bg-gray-800 shadow-lg border-t rounded-lg overflow-hidden backdrop-blur-md"
       >
         <article className="flex h-full p-4">
-          <section className="w-3/5 h-full relative p-2 pr-8">
-            <div className="flex justify-center gap-1 pt-12">
+          <section className="w-3/5 h-full relative p-2">
+            <div className="absolute gap-1 pt-12 w-full">
               <button
                 onClick={() => toggleForm("signUp")}
                 className={`mb-4 px-4 py-2 rounded-md shadow-sm font-semibold ${
                   activeButton === "signUp"
                     ? "bg-[#F0B90B] text-white"
-                    : "bg-gray-600 "
+                    : "bg-gray-600"
                 } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F0B90B]`}
               >
                 Sign up
@@ -67,13 +66,13 @@ const AvatarProfile: React.FC = () => {
                 className={`mb-4 px-4 py-2 rounded-md shadow-sm font-semibold ${
                   activeButton === "logIn"
                     ? "bg-[#F0B90B] text-white"
-                    : "bg-gray-600 "
+                    : "bg-gray-600"
                 } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F0B90B]`}
               >
                 Log in
               </button>
             </div>
-            <div className="w-full h-full ">
+            <div className="w-full h-full flex justify-center items-center">
               {activeButton === "logIn" ? <SignIn /> : <SignUp />}
             </div>
           </section>
@@ -90,7 +89,7 @@ const AvatarProfile: React.FC = () => {
                   : "🍿 Ready to dive into the world of unlimited entertainment? Enter your credentials and let the cinematic adventure begin!"}
               </p>
             </div>
-            <div className="relative w-[547px] h-[546px] overflow-hidden">
+            <div className="relative w-[530px] h-[546px] overflow-hidden">
               <Image
                 src={activeButton === "logIn" ? login2 : login}
                 alt={activeButton === "logIn" ? "login2" : "login"}

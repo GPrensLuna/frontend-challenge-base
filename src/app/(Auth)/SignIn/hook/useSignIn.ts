@@ -7,7 +7,7 @@ export async function useSignIn(values: SignInFormValues): Promise<{
   message: string;
 }> {
   try {
-    const response = await fetch(`/auth/login`, {
+    const response = await fetch(`/api/auth/SignIn`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

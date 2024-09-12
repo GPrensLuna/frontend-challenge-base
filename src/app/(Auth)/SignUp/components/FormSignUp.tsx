@@ -9,40 +9,42 @@ import {
   SignUpSchema,
   SignUpValue,
 } from "../validations";
-import {
-  errorToast,
-  successToast,
-  useLoadingToast,
-} from "@/components/Alert/ToastSonner";
+import { useLoadingToast, errorToast } from "@/components/Alert/ToastSonner";
 import { useSignUp } from "../hook/useSignUp";
 
 const FormSignUp = (): JSX.Element => {
   const route = useRouter();
   const [isPending, startTransition] = useTransition();
+  const { signUp } = useSignUp();
 
   const onSubmit = (
     values: SignUpFormValues,
     actions: FormikHelpers<SignUpFormValues>,
   ): void => {
-    startTransition(async () => {
-      try {
-        const { message } = await useSignUp(values);
-        actions.resetForm();
-        route.push(process.env.URL_LOGIN ?? "");
-        route.refresh();
-        successToast(message || "");
-      } catch {
-        errorToast("Error desconocido");
-      }
-    });
+    try {
+      startTransition(async () => {
+        const { message, success } = await signUp(values);
+        if (success) {
+          route.refresh();
+        } else {
+          errorToast(message);
+        }
+      });
+    } catch (error) {
+      errorToast("An unexpected error occurred.");
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
 
   useLoadingToast(isPending);
 
   return (
-    <article className="min-h-[700px] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <section className="max-w-md w-full space-y-8 bg-gray-300/75 dark:bg-slate-600/90 p-10 rounded-xl">
-        <h1 className="uppercase text-3xl">Iniciar sesión</h1>
+    <article className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <section className="max-w-md w-full space-y-8 p-10 rounded-xl bg-gray-300 dark:bg-slate-600">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white uppercase">
+          Sign Up
+        </h1>
 
         <Formik
           initialValues={SignUpValue}
@@ -50,10 +52,10 @@ const FormSignUp = (): JSX.Element => {
           onSubmit={onSubmit}
         >
           {() => (
-            <Form className="space-y-8 ">
+            <Form className="space-y-6">
               {SignUpData.map(
                 ({ name, title, placeholder, type, required }) => (
-                  <div key={name}>
+                  <div key={name} className="space-y-1">
                     <label
                       htmlFor={name}
                       className="block text-sm font-medium text-gray-700 dark:text-white uppercase"
@@ -65,23 +67,23 @@ const FormSignUp = (): JSX.Element => {
                       name={name}
                       type={type}
                       placeholder={placeholder}
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                     />
                     <ErrorMessage
                       name={name}
                       component="p"
-                      className="mt-1 text-sm text-error"
+                      className="text-sm text-red-600"
                     />
                   </div>
                 ),
               )}
-              <div className="flex items-center justify-between">
+              <div className="flex justify-center">
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="w-full inline-flex dark:text-white font-bold items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm text-white hover:text-white bg-primary hover:bg-primary p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  className="w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                 >
-                  {isPending ? "Iniciando sesión..." : "Iniciar sesión"}
+                  {isPending ? "Registering..." : "Sign Up"}
                 </Button>
               </div>
             </Form>

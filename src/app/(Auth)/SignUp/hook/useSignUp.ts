@@ -1,35 +1,57 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+"use client";
 import { SignUpFormValues } from "../validations";
+import { errorToast, successToast } from "@/components/Alert/ToastSonner";
 
-export async function useSignUp(values: SignUpFormValues): Promise<{
+interface SignUpResponse {
   message: string;
-}> {
-  try {
-    const response = await fetch(`${process.env.API_URL_BACKEND}/user`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-      credentials: "include",
-    });
+  success: boolean;
+}
 
-    if (!response.ok) {
+export function useSignUp(): {
+  signUp: (values: SignUpFormValues) => Promise<SignUpResponse>;
+} {
+  const signUp = async (values: SignUpFormValues): Promise<SignUpResponse> => {
+    try {
+      const response = await fetch(`/api/auth/SignUp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        errorToast(
+          "An unexpected error occurred while processing your request.",
+        );
+
+        return {
+          message:
+            errorData.message ??
+            "An unexpected error occurred while processing your request.",
+          success: false,
+        };
+      }
+
+      await response.json();
+      successToast("Usuario registrado con éxito.");
+
       return {
-        message: "Error desconocido",
+        message: "Usuario registrado con éxito.",
+        success: true,
+      };
+    } catch {
+      errorToast("An unexpected error occurred while processing your request.");
+
+      return {
+        message: "An unexpected error occurred while processing your request.",
+        success: false,
       };
     }
+  };
 
-    const data = await response.json();
-
-    document.cookie = `token=${data.data.id}; path=/; secure; SameSite=Strict`;
-
-    return {
-      message: "Inicio de sesión exitoso",
-    };
-  } catch {
-    return {
-      message: "Error al iniciar sesión",
-    };
-  }
+  return { signUp };
 }

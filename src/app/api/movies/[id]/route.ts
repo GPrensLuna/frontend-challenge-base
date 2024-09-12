@@ -9,7 +9,6 @@ export async function GET(
     const url = new URL(request.url);
 
     const id = url.pathname.split("/").pop();
-
     if (!id) {
       return NextResponse.json(
         { error: "ID parameter is missing" },
@@ -22,9 +21,10 @@ export async function GET(
     );
 
     if (!response.ok) {
-      throw new Error(`Error fetching data: ${response.statusText}`);
+      throw new Error(`Error fetching data`);
     }
     const data = await response.json();
+
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
