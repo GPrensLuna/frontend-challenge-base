@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 "use client";
-import { FC, memo } from "react";
+import { FC, memo, useEffect } from "react";
 import { SkeletonButton } from "./Skeleton/SkeletonButton";
 import { MenuNavBar } from "./TypeScript";
 import dynamic from "next/dynamic";
@@ -28,8 +28,10 @@ const LogOutButton = dynamic(() => import("../Buttons/LogOutButton"), {
 });
 
 const Navbar: FC = () => {
-  const { isAuthenticated } = useSession();
-
+  const { isAuthenticated, fetchProfile } = useSession();
+  useEffect(() => {
+    fetchProfile();
+  }, [isAuthenticated]);
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 shadow-md transition-shadow duration-300 w-full ease-in-out bg-lightNavBar dark:bg-darkNavBar h-[69px] bg-black">
       <div className="mx-auto flex items-center w-full h-[69px] px-[100px] py-0 gap-[42px] opacity-1">
