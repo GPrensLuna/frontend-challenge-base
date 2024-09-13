@@ -24,7 +24,7 @@ export const useDetail = ({
         }
         const data: Movie[] = await response.json();
         setMovie(data);
-      } catch (err) {
+      } catch {
         setError("Error fetching genres");
       } finally {
         setLoading(false);
