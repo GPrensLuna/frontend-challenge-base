@@ -33,9 +33,11 @@ const FavoriteMoviesProvider: React.FC<{ children: ReactNode }> = ({
   const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
   const fetchFavoriteMovies = useCallback(async () => {
-    if (!profile) return;
+    if (!isAuthenticated || !profile) {
+      setFavoriteMovies([]);
+      return;
+    }
     setLoading(true);
     try {
       const response = await fetch(`/api/favorite?userId=${profile.id}`, {
@@ -62,6 +64,9 @@ const FavoriteMoviesProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     fetchFavoriteMovies();
+    if (!isAuthenticated) {
+      setFavoriteMovies([]);
+    }
   }, [fetchFavoriteMovies, profile, isAuthenticated]);
 
   const showLoginAlert = (): void => {
@@ -109,15 +114,19 @@ const FavoriteMoviesProvider: React.FC<{ children: ReactNode }> = ({
 
   const removeFavorite = useCallback(
     async (movieId: string): Promise<void> => {
-      if (!profile) return;
+      if (!isAuthenticated || !profile) {
+        showLoginAlert();
+        return;
+      }
 
       try {
-        const response = await fetch(`/api/favorite/${movieId}`, {
+        const response = await fetch(`/api/favorite`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userId: profile.id }),
+          credentials: "include",
+          body: JSON.stringify({ movieId: movieId, userId: profile.id }),
         });
         if (response.ok) {
           setFavoriteMovies((prevMovies) =>

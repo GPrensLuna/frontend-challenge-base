@@ -96,15 +96,9 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
         { status: 500 },
       );
     }
-    const url = new URL(req.url);
+
+    const data = await req.json();
     const authToken = req.cookies.get("authorization");
-    const id = url.pathname.split("/").pop();
-    if (!id) {
-      return NextResponse.json(
-        { error: "ID parameter is missing" },
-        { status: 400 },
-      );
-    }
 
     const response = await fetch(`${apiUrlBackend}/favorite`, {
       method: "POST",
@@ -112,7 +106,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify(id),
+      body: JSON.stringify(data),
       credentials: "include",
     });
 

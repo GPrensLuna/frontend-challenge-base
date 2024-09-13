@@ -22,9 +22,9 @@ const BackdropImage: React.FC<BackdropImageProps> = ({
       }}
       role="img"
       loading="lazy"
-      aria-label={`${title} backdrop`}
-      className="absolute inset-0 w-full h-60 rounded-lg opacity-50"
       placeholder="blur"
+      className="absolute inset-0 w-full h-60 rounded-lg opacity-50"
+      aria-label={`${title} backdrop`}
       blurDataURL={`https://image.tmdb.org/t/p/w500${backdropPath}`}
     />
   );

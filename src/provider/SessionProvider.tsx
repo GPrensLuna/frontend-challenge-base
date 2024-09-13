@@ -8,6 +8,18 @@ import {
   ReactNode,
 } from "react";
 
+interface ErrorState {
+  message: string;
+  error: string | null;
+  statusCode: number | null;
+}
+
+const initialErrorState: ErrorState = {
+  message: "",
+  error: null,
+  statusCode: null,
+};
+
 interface Profile {
   id?: string;
   email?: string;
@@ -16,8 +28,8 @@ interface Profile {
 
 interface SessionContextProps {
   profile: Profile;
-  message: string;
   isAuthenticated: boolean;
+  errorState: ErrorState;
   fetchProfile: () => void;
   logout: () => void;
 }
@@ -28,8 +40,9 @@ const SessionContext = createContext<SessionContextProps | undefined>(
 
 const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<Profile>({});
-  const [message, setMessage] = useState<string>("");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [errorState, setErrorState] = useState<ErrorState>(initialErrorState);
+
   const fetchProfile = async (): Promise<void> => {
     try {
       const response = await fetch(`/api/auth/profile`, {
@@ -41,28 +54,37 @@ const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
-          setMessage("No autorizado. Token inválido o no proporcionado");
-        } else {
-          setMessage("Error desconocido");
-        }
+        const errorDetails = await response.json();
+        setErrorState({
+          message: errorDetails.message || "Error desconocido",
+          error: errorDetails.error || null,
+          statusCode: response.status || null,
+        });
         setIsAuthenticated(false);
         setProfile({});
         return;
       }
 
       const data: Profile = await response.json();
-      if (data && typeof data === "object") {
+      if (data.id) {
         setProfile(data);
-        setMessage("Perfil recuperado con éxito");
         setIsAuthenticated(true);
+        setErrorState(initialErrorState);
       } else {
-        setMessage("Datos del perfil inválidos");
+        setErrorState({
+          message: "Datos del perfil inválidos",
+          error: "InvalidProfileData",
+          statusCode: null,
+        });
         setIsAuthenticated(false);
         setProfile({});
       }
-    } catch {
-      setMessage("Error al recuperar el perfil");
+    } catch (error) {
+      setErrorState({
+        message: "Error al recuperar el perfil",
+        error: error instanceof Error ? error.message : "UnknownError",
+        statusCode: null,
+      });
       setIsAuthenticated(false);
       setProfile({});
     }
@@ -79,15 +101,24 @@ const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       });
 
       if (!response.ok) {
-        setMessage("Error al cerrar sesión");
+        const errorDetails = await response.json();
+        setErrorState({
+          message: errorDetails.message || "Error al cerrar sesión",
+          error: errorDetails.error || null,
+          statusCode: response.status || null,
+        });
         return;
       }
 
       setProfile({});
       setIsAuthenticated(false);
-      setMessage("Has cerrado sesión con éxito");
-    } catch {
-      setMessage("Error al cerrar sesión");
+      setErrorState(initialErrorState);
+    } catch (error) {
+      setErrorState({
+        message: "Error al cerrar sesión",
+        error: error instanceof Error ? error.message : "UnknownError",
+        statusCode: null,
+      });
     }
   };
 
@@ -97,7 +128,7 @@ const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <SessionContext.Provider
-      value={{ profile, message, isAuthenticated, fetchProfile, logout }}
+      value={{ profile, isAuthenticated, errorState, fetchProfile, logout }}
     >
       {children}
     </SessionContext.Provider>

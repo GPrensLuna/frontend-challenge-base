@@ -33,7 +33,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movie, id }) => {
     } else {
       setIsFavorite(false);
     }
-  }, [favoriteMovies, id]);
+  }, [favoriteMovies, id, isAuthenticated]);
 
   const handleClick = async (): Promise<void> => {
     if (!isAuthenticated) {
