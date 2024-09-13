@@ -29,7 +29,7 @@ const useLoadingToast = (isVisible: boolean, message?: string): void => {
       });
     }
 
-    return () => {
+    return (): void => {
       if (loadingToast !== null) {
         toast.dismiss(loadingToast);
       }

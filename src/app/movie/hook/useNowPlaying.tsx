@@ -17,7 +17,7 @@ export const useNowPlaying = (): {
         const response = await fetch("/api/movie/now_playing");
         const data: ApiResponse = await response.json();
         setMovies(data.results);
-      } catch (err) {
+      } catch {
         setError("Error fetching movies");
       } finally {
         setLoading(false);

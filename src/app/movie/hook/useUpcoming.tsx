@@ -17,7 +17,7 @@ export const useUpcoming = (): {
         const response = await fetch("/api/movies/upcoming");
         const data: ApiResponse = await response.json();
         setMovies(data.results);
-      } catch (err) {
+      } catch {
         setError("Error fetching movies");
       } finally {
         setLoading(false);
