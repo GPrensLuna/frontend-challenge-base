@@ -17,7 +17,7 @@ export const usePopular = (): {
         const response = await fetch("/api/movies/popular");
         const data: ApiResponse = await response.json();
         setMovies(data.results);
-      } catch (err) {
+      } catch {
         setError("Error fetching movies");
       } finally {
         setLoading(false);

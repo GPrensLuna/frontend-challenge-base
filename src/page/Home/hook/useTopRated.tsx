@@ -17,7 +17,7 @@ export const useTopRated = (): {
         const response = await fetch("/api/movies/top_rated");
         const data: ApiResponse = await response.json();
         setMovies(data.results);
-      } catch (err) {
+      } catch {
         setError("Error fetching movies");
       } finally {
         setLoading(false);

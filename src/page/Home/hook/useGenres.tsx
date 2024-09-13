@@ -28,7 +28,7 @@ export const useGenres = (): {
         }
         const data: GenresResponse = await response.json();
         setGenres(data.genres);
-      } catch (err) {
+      } catch {
         setError("Error fetching genres");
       } finally {
         setLoading(false);
