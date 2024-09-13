@@ -12,7 +12,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         { status: 500 },
       );
     }
-
     const authToken = req.cookies.get("Authentication");
     const response = await fetch(`${apiUrlBackend}/auth/profile`, {
       method: "GET",

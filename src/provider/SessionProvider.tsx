@@ -30,7 +30,6 @@ const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<Profile>({});
   const [message, setMessage] = useState<string>("");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
   const fetchProfile = async (): Promise<void> => {
     try {
       const response = await fetch(`/api/auth/profile`, {
@@ -53,7 +52,6 @@ const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }
 
       const data: Profile = await response.json();
-
       if (data && typeof data === "object") {
         setProfile(data);
         setMessage("Perfil recuperado con éxito");

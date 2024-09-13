@@ -10,6 +10,8 @@
             "nextjs",
             "Quickbet",
             "sonner",
+            "Swal",
+            "sweetalert",
             "tailwindcss"
         ]
 }

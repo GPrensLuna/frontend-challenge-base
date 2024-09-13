@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json();
-
     const apiUrlBackend = process.env.API_URL_BACKEND;
 
     if (!apiUrlBackend) {

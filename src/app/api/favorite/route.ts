@@ -12,9 +12,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         { status: 500 },
       );
     }
-    const authToken = req.cookies.get("authorization");
+    const url = new URL(req.url);
 
-    const response = await fetch(`${apiUrlBackend}/favorite`, {
+    const authToken = req.cookies.get("authorization");
+    const response = await fetch(`${apiUrlBackend}/favorite${url.search}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +31,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     if (cookies) {
       nextResponse.headers.set("Set-Cookie", cookies);
     }
-
     return nextResponse;
   } catch {
     return NextResponse.json(

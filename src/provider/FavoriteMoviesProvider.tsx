@@ -11,11 +11,13 @@ import {
   useCallback,
 } from "react";
 import { useSession } from "./SessionProvider";
+import Swal from "sweetalert2";
 
 interface FavoriteMoviesContextProps {
   favoriteMovies: Movie[];
   addFavorite: (movie: Movie) => Promise<void>;
   removeFavorite: (movieId: string) => Promise<void>;
+  fetchFavoriteMovies: () => Promise<void>;
   loading: boolean;
   error: string | null;
 }
@@ -27,17 +29,22 @@ const FavoriteMoviesContext = createContext<
 const FavoriteMoviesProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const { profile } = useSession();
+  const { isAuthenticated, profile } = useSession();
   const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchFavoriteMovies = useCallback(async () => {
     if (!profile) return;
-
     setLoading(true);
     try {
-      const response = await fetch(`/api/favorite?userId=${profile.id}`);
+      const response = await fetch(`/api/favorite?userId=${profile.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "GET",
+      });
+
       if (response.ok) {
         const data: Movie[] = await response.json();
         setFavoriteMovies(data);
@@ -51,15 +58,26 @@ const FavoriteMoviesProvider: React.FC<{ children: ReactNode }> = ({
     } finally {
       setLoading(false);
     }
-  }, [profile]);
+  }, [profile, loading]);
 
   useEffect(() => {
     fetchFavoriteMovies();
-  }, [fetchFavoriteMovies]);
+  }, [fetchFavoriteMovies, profile, isAuthenticated]);
 
+  const showLoginAlert = (): void => {
+    Swal.fire({
+      title: "Login Required",
+      text: "You need to be logged in to perform this action.",
+      icon: "warning",
+      confirmButtonColor: "#FF6600",
+    });
+  };
   const addFavorite = useCallback(
     async (movie: Movie): Promise<void> => {
-      if (!profile) return;
+      if (!isAuthenticated) {
+        showLoginAlert();
+        return;
+      }
 
       try {
         const response = await fetch("/api/favorite", {
@@ -118,7 +136,14 @@ const FavoriteMoviesProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <FavoriteMoviesContext.Provider
-      value={{ favoriteMovies, addFavorite, removeFavorite, loading, error }}
+      value={{
+        favoriteMovies,
+        fetchFavoriteMovies,
+        addFavorite,
+        removeFavorite,
+        loading,
+        error,
+      }}
     >
       {children}
     </FavoriteMoviesContext.Provider>

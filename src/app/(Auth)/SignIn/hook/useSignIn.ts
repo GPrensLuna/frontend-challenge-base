@@ -36,7 +36,6 @@ export function useSignIn(): {
           success: false,
         };
       }
-
       fetchProfile();
 
       successToast("Successfully signed in. Welcome!");
