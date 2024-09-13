@@ -21,6 +21,7 @@ const initialErrorState: ErrorState = {
 };
 
 interface Profile {
+  statusCode?: number;
   id?: string;
   email?: string;
   username?: string;
@@ -66,7 +67,7 @@ const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }
 
       const data: Profile = await response.json();
-      if (data.id) {
+      if (data.statusCode !== 401) {
         setProfile(data);
         setIsAuthenticated(true);
         setErrorState(initialErrorState);
