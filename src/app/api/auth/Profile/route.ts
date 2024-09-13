@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextRequest, NextResponse } from "next/server";
@@ -14,7 +13,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       );
     }
     const authToken = req.cookies.get("Authentication");
-    console.log(authToken);
 
     const response = await fetch(`${apiUrlBackend}/auth/profile`, {
       method: "GET",
@@ -24,19 +22,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       },
       credentials: "include",
     });
-    console.log(response);
 
     const cookies = response.headers.get("set-cookie");
 
     const responseBody = await response.json();
-    console.log(responseBody);
 
     const nextResponse = NextResponse.json(responseBody);
 
     if (cookies) {
       nextResponse.headers.set("Set-Cookie", cookies);
     }
-    console.log(nextResponse);
     return nextResponse;
   } catch {
     return NextResponse.json(

@@ -46,7 +46,7 @@ const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const fetchProfile = async (): Promise<void> => {
     try {
-      const response = await fetch(`/api/auth/profile`, {
+      const response = await fetch(`/api/auth/Profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +93,7 @@ const SessionProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const logout = async (): Promise<void> => {
     try {
-      const response = await fetch(`/api/auth/logout`, {
+      const response = await fetch(`/api/auth/LogOut`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
